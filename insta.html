@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kerala Instagram Account Searcher</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-image:url(/insta\ front\ page.png);
+            background-size: cover; 
+            background-position-y: auto; 
+            background-repeat: no-repeat;
+            
+
+        }
+        .search-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .account-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .account-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+        }
+        .account-card img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <h1>Kerala Instagram Account Searcher</h1>
+    
+    <div class="search-form">
+        <select id="location">
+            <option value="">Select Location</option>
+            <option value="pathanamthitta">Pathanamthitta</option>
+            <option value="idukki">Idukki</option>
+            <option value="kannur">Kannur</option>
+            <option value="kollam">Kollam</option>
+            <option value="trivandrum">Trivandrum</option>
+            <option value="alappuzha">Alappuzha</option>
+            <option value="kottayam">Kottayam</option>
+            <option value="kochi">Kochi</option>
+            <option value="thrissur">Thrissur</option>
+            <option value="palakkad">Palakkad</option>
+            <option value="malappuram">Malappuram</option>
+            <option value="kozhikode">Kozhikode</option>
+            <option value="wayanad">Wayanad</option>
+            <option value="kasaragod">Kasaragod</option>
+        </select>
+        <select id="gender">
+            <option value="">Select Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+        </select>
+        <button onclick="searchAccounts()">Search</button>
+    </div>
+
+    <div id="results" class="account-list">
+        <!-- Account results will be dynamically inserted here -->
+    </div>
+
+    <script>
+        const keralaNames = {
+            male: ['Arun', 'Biju', 'Deepak', 'Girish', 'Hari', 'Jithin', 'Karthik', 'Manoj', 'Nikhil', 'Pradeep', 'Rahul', 'Sanjay', 'Tomy', 'Unni', 'Vijay'],
+            female: ['Anjali', 'Bindu', 'Divya', 'Geetha', 'Haritha', 'Jyothi', 'Kavya', 'Lakshmi', 'Meera', 'Nisha', 'Priya', 'Remya', 'Suja', 'Thara', 'Uma']
+        };
+
+        function searchAccounts() {
+            const location = document.getElementById('location').value;
+            const gender = document.getElementById('gender').value;
+            
+            if (!location || !gender) {
+                alert('Please select both location and gender');
+                return;
+            }
+
+            const accounts = generateAccounts(location, gender);
+            displayAccounts(accounts);
+        }
+
+        function generateAccounts(location, gender) {
+            const accounts = [];
+            const primaryGender = gender;
+            const secondaryGender = gender === 'male' ? 'female' : 'male';
+
+            for (let i = 0; i < 20; i++) {
+                const accountGender = i < 2 ? primaryGender : secondaryGender;
+                const name = keralaNames[accountGender][Math.floor(Math.random() * keralaNames[accountGender].length)];
+                accounts.push({
+                    name: name,
+                    username: `${name.toLowerCase()}_${location}`,
+                    location: location,
+                    gender: accountGender,
+                    profilePic: `/placeholder.svg?height=150&width=150&text=${name[0]}`,
+                });
+            }
+
+            return accounts.sort(() => Math.random() - 0.5); // Shuffle the array
+        }
+
+        function displayAccounts(accounts) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';
+
+            accounts.forEach(account => {
+                const accountCard = document.createElement('div');
+                accountCard.className = 'account-card';
+                accountCard.innerHTML = `
+                    <img src="${account.profilePic}" alt="${account.name}">
+                    <h3>${account.name}</h3>
+                    <p>@${account.username}</p>
+                    <p>${account.location}</p>
+                    <p>${account.gender}</p>
+                `;
+                accountCard.onclick = () => viewProfile(account);
+                resultsDiv.appendChild(accountCard);
+            });
+        }
+
+        function viewProfile(account) {
+            // In a real application, this would navigate to a new page
+            // For this example, we'll use localStorage to simulate page navigation
+            localStorage.setItem('selectedProfile', JSON.stringify(account));
+            window.location.href = 'profile.html';
+        }
+    </script>
+</body>
+</html>
